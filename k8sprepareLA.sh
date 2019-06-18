@@ -29,17 +29,18 @@ echo "DONE!"
 
 echo "Turning Off SElinux"
 setenforce 0 
-sed -i --follow-symlinks 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
 echo "DONE!"
 
+sed -i --follow-symlinks 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
+
 echo "Setting up Firewall"
-firewall-cmd --permanent --add-port=6443/tcp
-firewall-cmd --permanent --add-port=2379-2380/tcp
-firewall-cmd --permanent --add-port=10250/tcp 
-firewall-cmd --permanent --add-port=10255/tcp 
-firewall-cmd --permanent --add-port=30000-32767/tcp 
-firewall-cmd --permanent --add-port=6783/tcp 
-firewall-cmd --reload 
+iptables -I INPUT -p tcp -m tcp --dport 10250 -j ACCEPT
+iptables -I INPUT -p tcp -m tcp --dport 10255 -j ACCEPT
+iptables -I INPUT -p tcp -m tcp --dport 6783 -j ACCEPT
+iptables -I INPUT -p tcp -m tcp --dport 6443 -j ACCEPT
+iptables -I INPUT -p tcp -m tcp --dport 2379:2380 -j ACCEPT
+iptables -I INPUT -p tcp -m tcp --dport 30000:32767 -j ACCEPT
+iptables -L|grep dpt
 echo '1' > /proc/sys/net/bridge/bridge-nf-call-iptables
 echo "DONE!"
 

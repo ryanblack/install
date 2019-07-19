@@ -13,5 +13,10 @@ cat > /etc/docker/daemon.json <<EOF
 EOF
 echo "DONE!"
 
+#Turnoff Swaping
+echo "Swaping is Off now..."
+swapoff -a
+sed -i.bak '/swap/d' /etc/fstab
+
 read -p "Now we need to Reboot..."
 shutdown -r now

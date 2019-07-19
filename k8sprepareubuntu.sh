@@ -13,6 +13,11 @@ cat > /etc/docker/daemon.json <<EOF
 EOF
 echo "DONE!"
 
+echo "Docker Restarted"
+systemctl restart docker
+
+docker info |grep Cgroup
+
 #Turnoff Swaping
 echo "Swaping is Off now..."
 swapoff -a
